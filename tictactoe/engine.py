@@ -12,13 +12,20 @@ class Engine:
         self.foe = foe
         self.level = level
 
-    def minimax(self, board: Board, ai_turn: bool, depth: int, alpha: float,
-                beta: float) -> tuple:
+    def minimax(self, board: Board, ai_turn: bool, depth: int, alpha: float, beta: float) -> tuple:
         available_moves = board.empty_squares
+
         if len(available_moves) == board.size**2:
             return 0, random.choice(list(range(board.size**2)))
-        if board.is_gameover() or depth >= self.level:
-            return self.evaluate_board(board, depth), None
+
+        winner = board.winner()
+        if winner == self.foe:
+            return 1 * board.size**2 - depth, None
+        elif winner == self.ai:
+            return -1 * board.size**2 + depth, None
+
+        if not available_moves or depth >= self.level:
+            return 0, None
 
         if ai_turn:
             max_eval = float('-inf')
@@ -27,12 +34,12 @@ class Engine:
                 board.push(move, self.ai)
                 eval_ = self.minimax(board, False, depth + 1, alpha, beta)[0]
                 board.undo(move)
-                max_eval = max(max_eval, eval_)
-                if max_eval == eval_:
+                if eval_ > max_eval:
+                    max_eval = eval_
                     best_move = move
                 alpha = max(alpha, max_eval)
-                if alpha > beta:
-                    return max_eval, best_move
+                if alpha >= beta:
+                    break
             return max_eval, best_move
         else:
             min_eval = float('inf')
@@ -41,12 +48,12 @@ class Engine:
                 board.push(move, self.foe)
                 eval_ = self.minimax(board, True, depth + 1, alpha, beta)[0]
                 board.undo(move)
-                min_eval = min(min_eval, eval_)
-                if min_eval == eval_:
+                if eval_ < min_eval:
+                    min_eval = eval_
                     best_move = move
-                beta = min(min_eval, beta)
-                if beta < alpha:
-                    return min_eval, best_move
+                beta = min(beta, min_eval)
+                if beta <= alpha:
+                    break
             return min_eval, best_move
 
     def evaluate_board(self, board: Board, depth: int) -> Score:
@@ -60,3 +67,4 @@ class Engine:
         best_move = self.minimax(board, True, 0, float('-inf'),
                                  float('inf'))[1]
         return best_move
+

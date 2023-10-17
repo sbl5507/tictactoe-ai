@@ -92,10 +92,10 @@ class Gui:
         if self.board.is_draw():
             self.display_text("Draw!", 50, 'center', WINDOW_WIDTH - 50)
         elif self.board.winner() == Symbol.CIRCLE:
-            self.display_text("Newbie Wins!", 50, 'center',
+            self.display_text("Batman Wins!", 50, 'center',
                               WINDOW_WIDTH - MARGIN + 10)
         elif self.board.winner() == Symbol.CROSS:
-            self.display_text("Batman Wins!", 50, 'center',
+            self.display_text("Newbie Wins!", 50, 'center',
                               WINDOW_WIDTH - MARGIN + 10)
         else:
             if self.board.turn == Symbol.CIRCLE:
@@ -111,9 +111,9 @@ class Gui:
 
         self.window.blit(P1_AVATAR, P1_RECT)
         self.window.blit(P2_AVATAR, P2_RECT)
-        self.display_text(f'{str(self.board.p1_score)}', 50, PROFILE_SIZE + 20,
+        self.display_text(f'{str(self.board.p2_score)}', 50, PROFILE_SIZE + 20,
                           20, YELLOW)
-        self.display_text(f'{str(self.board.p2_score)}', 50,
+        self.display_text(f'{str(self.board.p1_score)}', 50,
                           WINDOW_WIDTH - PROFILE_SIZE - 50, 20, YELLOW)
 
     def update_display(self):
