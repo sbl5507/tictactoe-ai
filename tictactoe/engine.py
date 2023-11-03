@@ -38,8 +38,8 @@ class Engine:
                     max_eval = eval_
                     best_move = move
                 alpha = max(alpha, max_eval)
-                if alpha >= beta:
-                    break
+                if alpha > beta:
+                    return max_eval, best_move
             return max_eval, best_move
         else:
             min_eval = float('inf')
@@ -52,8 +52,8 @@ class Engine:
                     min_eval = eval_
                     best_move = move
                 beta = min(beta, min_eval)
-                if beta <= alpha:
-                    break
+                if beta < alpha:
+                    return min_eval, best_move
             return min_eval, best_move
 
     def evaluate_board(self, board: Board, depth: int) -> Score:
